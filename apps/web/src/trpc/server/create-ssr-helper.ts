@@ -2,6 +2,7 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import superjson from "superjson";
+import { isQuickCreateEnabled } from "@/features/quick-create";
 import { getUserSession } from "@/features/user/data";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
@@ -38,6 +39,9 @@ export const createPrivateSSRHelper = cache(async () => {
   const { user } = await getUserSession();
 
   if (!user || user.isGuest) {
+    if (isQuickCreateEnabled) {
+      redirect("/quick-create");
+    }
     const pathname = await getPathname();
     redirect(
       buildSafeRedirectUrl({ destination: "/login", returnUrl: pathname }),
