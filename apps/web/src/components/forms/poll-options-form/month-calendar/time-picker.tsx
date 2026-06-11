@@ -10,6 +10,8 @@ import * as React from "react";
 import { dayjs } from "@/lib/dayjs";
 import { getDuration } from "@/utils/date-time-utils";
 
+const STEP_MINUTES = 5;
+
 export interface TimePickerProps {
   value?: Date;
   after?: Date;
@@ -29,22 +31,22 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
       return [dayjs(value).toISOString()];
     }
     let cursor = after
-      ? dayjs(after).add(15, "minutes")
+      ? dayjs(after).add(STEP_MINUTES, "minutes")
       : dayjs(value).startOf("day");
 
     const res: string[] = [];
 
     if (after) {
-      let cursor = dayjs(after).add(15, "minutes");
+      let cursor = dayjs(after).add(STEP_MINUTES, "minutes");
       while (cursor.diff(after, "hours") < 24) {
         res.push(cursor.toISOString());
-        cursor = cursor.add(15, "minutes");
+        cursor = cursor.add(STEP_MINUTES, "minutes");
       }
     } else {
       cursor = dayjs(value).startOf("day");
       while (cursor.isSame(value, "day")) {
         res.push(cursor.toISOString());
-        cursor = cursor.add(15, "minutes");
+        cursor = cursor.add(STEP_MINUTES, "minutes");
       }
     }
     return res;

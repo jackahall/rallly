@@ -150,7 +150,8 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             );
           },
         }}
-        step={15}
+        step={5}
+        timeslots={6}
         onSelectSlot={({ start, end, action }) => {
           // on select slot
           const startDate = new Date(start);
