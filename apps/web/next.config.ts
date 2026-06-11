@@ -11,6 +11,8 @@ const withBundleAnalyzer = createBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+const isVercel = !!process.env.VERCEL;
+
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["web.local.rallly.co"],
   experimental: {
@@ -19,7 +21,9 @@ const nextConfig: NextConfig = {
     },
   },
   output:
-    process.env.NEXT_PUBLIC_SELF_HOSTED === "true" ? "standalone" : undefined,
+    !isVercel && process.env.NEXT_PUBLIC_SELF_HOSTED === "true"
+      ? "standalone"
+      : undefined,
   productionBrowserSourceMaps: true,
   transpilePackages: [
     "@rallly/database",
@@ -28,7 +32,7 @@ const nextConfig: NextConfig = {
     "@rallly/posthog",
     "@rallly/emails",
   ],
-  assetPrefix: process.env.NEXT_PUBLIC_BASE_URL,
+  assetPrefix: isVercel ? undefined : process.env.NEXT_PUBLIC_BASE_URL,
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
